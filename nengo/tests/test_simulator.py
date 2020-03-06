@@ -404,3 +404,14 @@ def test_pickle_optimize(caplog, seed):
     unpickled.close()
 
     assert np.all(before == after)
+
+
+def test_sim_reopen(Simulator):
+    with Simulator(nengo.Network()) as sim:
+        assert not sim.closed
+
+    assert sim.closed
+
+    with pytest.raises(SimulatorClosed, match="simulator is closed"):
+        with sim:
+            pass

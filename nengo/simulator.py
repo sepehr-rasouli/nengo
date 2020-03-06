@@ -165,6 +165,9 @@ class Simulator:
             )
 
     def __enter__(self):
+        if self.closed:
+            raise SimulatorClosed("Cannot re-open after simulator is closed")
+
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):

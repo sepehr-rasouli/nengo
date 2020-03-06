@@ -35,6 +35,8 @@ Release history
   there are now no weights to apply learning to, so this will result in an
   error. The old behaviour can be obtained by setting ``transform=1``.
   (`#1591 <https://github.com/nengo/nengo/pull/1591>`__)
+- Trying to re-open a closed Simulator will now raise an error.
+  (`#1599 <https://github.com/nengo/nengo/pull/1599>`__)
 
 **Fixed**
 
