@@ -98,7 +98,7 @@ setup_cfg:
       # - abstract-method
 
       - bad-continuation #leave this on the list for now,
-      # since bad-continuation doesnt work well with black
+      # since bad-continuation does not work well with black
 
       # - bad-string-format-type
       # - broad-except
@@ -118,7 +118,7 @@ setup_cfg:
       # - logging-format-interpolation
 
       # - missing-docstring
-      - missing-module-docstring
+      # - missing-module-docstring
 
       # - nonexistent-operator
       # - pointless-statement

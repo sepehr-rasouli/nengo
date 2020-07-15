@@ -398,7 +398,7 @@ def test_vector(Simulator, AnyNeuronType, plt, seed, allclose):
 
 def test_dimensionality_errors(NonDirectNeuronType, seed, rng):
     """Ensures validation errors are ran when giving connections
-    invalid dimenstions, and errors are not given when dimensions
+    invalid dimensions, and errors are not given when dimensions
     are valid"""
     N = 10
     with nengo.Network(seed=seed) as m:

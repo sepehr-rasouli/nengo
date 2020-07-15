@@ -23,6 +23,8 @@ import nengo.utils.least_squares_solvers
 
 
 class Mock:
+    """Simple class with many methods used for monkeypatching"""
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -79,6 +81,8 @@ lstsq_solver_types = [
 
 
 class SolverMock:
+    """Simple class with methods that are found in solvers"""
+
     n_calls = {}
 
     def __init__(self):
@@ -119,6 +123,7 @@ def get_solver_test_args(
 
 
 def test_decoder_cache(tmpdir):
+    """Tests decoder cache ensuring it uses solvers properly"""
     cache_dir = str(tmpdir)
 
     # Basic test, that results are cached.
@@ -306,6 +311,8 @@ def test_decoder_cache_with_E_argument_to_solver(tmpdir):
 
 
 class DummyA:
+    """A test class to be whitelisted"""
+
     def __init__(self, attr=0):
         self.attr = attr
 
@@ -314,6 +321,8 @@ nengo.cache.Fingerprint.whitelist(DummyA)
 
 
 class DummyB:
+    """A test class to be whitelisted"""
+
     def __init__(self, attr=0):
         self.attr = attr
 
@@ -364,6 +373,7 @@ def test_unsupported_fingerprinting(obj):
 
 @pytest.mark.parametrize("cls", neuron_types + solver_types + lstsq_solver_types)
 def test_supported_fingerprinting(cls, monkeypatch):
+    """Tests fingerprinting on many monkeypatched solvers"""
     # patch so we can instantiate various solvers without the proper libraries
     monkeypatch.setitem(sys.modules, "scipy", Mock())
     monkeypatch.setitem(sys.modules, "scipy.optimize", Mock())
@@ -386,6 +396,7 @@ def test_supported_fingerprinting(cls, monkeypatch):
 
 
 def test_fails_for_lambda_expression():
+    """Tests that fingerprint error is raised with lambda expression"""
     with pytest.raises(FingerprintError):
         Fingerprint(lambda x: x)
 
@@ -458,6 +469,7 @@ def test_cache_concurrency(tmpdir, Simulator):
 
 
 def test_warns_out_of_context(tmpdir):
+    """Ensures user warning is thrown when not in context"""
     cache_dir = str(tmpdir)
     cache = DecoderCache(cache_dir=cache_dir)
 
@@ -469,6 +481,8 @@ def test_warns_out_of_context(tmpdir):
 
 
 def test_cacheindex_cannot_write(tmpdir):
+    """Ensures type error is thrown when changing or deleting
+    writable cache index incorrectly"""
     index = WriteableCacheIndex(cache_dir=str(tmpdir))
     with index:
         index[0] = ("file0", 0, 0)
@@ -499,6 +513,8 @@ def test_writeablecacheindex_writes(tmpdir):
 
 
 def test_writeablecacheindex_setitem(tmpdir):
+    """Ensures value error is thrown when setting index[0]
+    to an invalid setting"""
     index = WriteableCacheIndex(cache_dir=str(tmpdir))
 
     with pytest.raises(ValueError):
