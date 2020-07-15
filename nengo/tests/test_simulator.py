@@ -345,10 +345,9 @@ def test_simulator_progress_bars(Simulator):
 
     with nengo.Network() as model:
         for _ in range(3):
-            [nengo.Ensemble(10, 1) for i in range(3)]
+            print([nengo.Ensemble(10, 1) for i in range(3)])
             with nengo.Network():
-                [nengo.Ensemble(10, 1) for i in range(3)]
-
+                print([nengo.Ensemble(10, 1) for i in range(3)])
     build_invariants = ProgressBarInvariants()
     with Simulator(model, progress_bar=build_invariants) as sim:
         run_invariants = ProgressBarInvariants()

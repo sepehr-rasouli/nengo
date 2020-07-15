@@ -9,8 +9,8 @@ def test_fixed(allclose):
         model.buffer2 = spa.Buffer(dimensions=8, subdimensions=2)
         model.input = spa.Input(buffer1="A", buffer2="B")
 
-    input1, vocab1 = model.get_module_input("buffer1")
-    input2, vocab2 = model.get_module_input("buffer2")
+    _, vocab1 = model.get_module_input("buffer1")
+    _, vocab2 = model.get_module_input("buffer2")
 
     assert allclose(model.input.input_nodes["buffer1"].output, vocab1.parse("A").v)
     assert allclose(model.input.input_nodes["buffer2"].output, vocab2.parse("B").v)

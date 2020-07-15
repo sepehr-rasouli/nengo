@@ -39,8 +39,8 @@ class TestProgress:
 
         try:
             with Progress(max_steps=10) as p2:
-                raise Exception()
-        except Exception:
+                raise UnboundLocalError()
+        except UnboundLocalError:
             pass
         assert not p2.success
 

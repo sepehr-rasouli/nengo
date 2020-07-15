@@ -141,6 +141,7 @@ class SPA(nengo.Network):
                 self.config[obj].vocab = value.outputs[k][1]
 
             value.on_add(self)
+        return None
 
     def __exit__(self, ex_type, ex_value, traceback):
         super().__exit__(ex_type, ex_value, traceback)
@@ -156,6 +157,7 @@ class SPA(nengo.Network):
                 raise SpaModuleError(
                     "%s must be set as an attribute of a SPA network" % (net)
                 )
+        return None
 
     def get_module(self, name):
         """Return the module for the given name."""

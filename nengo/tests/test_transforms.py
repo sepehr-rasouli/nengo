@@ -1,3 +1,7 @@
+"""
+This module tests nengo/transforms.py
+"""
+
 import numpy as np
 import pytest
 
@@ -13,6 +17,7 @@ from nengo._vendor.npconv2d import conv2d
 def test_convolution(
     dimensions, padding, channels_last, fixed_kernel, Simulator, allclose, rng, seed
 ):
+    """tests the convolution"""
     input_d = 4
     input_channels = 2
     output_channels = 5
@@ -85,6 +90,7 @@ def test_convolution(
 @pytest.mark.parametrize("encoders", (True, False))
 @pytest.mark.parametrize("decoders", (True, False))
 def test_convolution_nef(encoders, decoders, Simulator):
+    """Tests nef for convolution"""
     with nengo.Network() as net:
         transform = nengo.transforms.Convolution(n_filters=2, input_shape=(3, 3, 1))
         a = nengo.Ensemble(9, 9)
@@ -109,6 +115,7 @@ def test_convolution_nef(encoders, decoders, Simulator):
 @pytest.mark.parametrize("use_dist", (False, True))
 @pytest.mark.parametrize("use_scipy", (False, True))
 def test_sparse(use_dist, use_scipy, Simulator, rng, seed, plt, monkeypatch, allclose):
+    """Tests sparse from scipy"""
     if use_scipy:
         scipy_sparse = pytest.importorskip("scipy.sparse")
     else:
@@ -175,6 +182,7 @@ def test_sparse(use_dist, use_scipy, Simulator, rng, seed, plt, monkeypatch, all
 @pytest.mark.parametrize("encoders", (True, False))
 @pytest.mark.parametrize("decoders", (True, False))
 def test_sparse_nef(encoders, decoders, Simulator):
+    """tests errors when using nef for sparse"""
     # Sparse transforms currently don't work with NEF connections,
     # so just check the errors
 

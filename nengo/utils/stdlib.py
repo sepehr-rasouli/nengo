@@ -165,7 +165,7 @@ def checked_call(func, *args, **kwargs):
     """
     try:
         return CheckedCall(func(*args, **kwargs), True)
-    except Exception:
+    except (TypeError, ValueError):
         tb = inspect.trace()
         if not len(tb) or tb[-1][0] is not inspect.currentframe():
             raise  # exception occurred inside func
@@ -191,7 +191,7 @@ def execfile(path, globals, locals=None):
         source = fp.read()
 
     code = compile(source, path, "exec")
-    exec(code, globals, locals)
+    exec(code, globals, locals)  # pylint: disable = exec-used
 
 
 def groupby(objects, key, hashable=None, force_list=True):
@@ -249,7 +249,8 @@ def get_terminal_size(fallback=(80, 24)):
 
     try:
         return shutil.get_terminal_size(fallback)
-    except Exception:  # pragma: no cover
+    # This code isn't being run so I can't find the specific exceptions
+    except Exception:  # pylint: disable = broad-except
         return os.terminal_size(fallback)
 
 

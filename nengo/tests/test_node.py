@@ -1,3 +1,6 @@
+"""
+This module tests nengo/node.py
+"""
 import numpy as np
 import pytest
 
@@ -138,6 +141,8 @@ def test_circular(Simulator, seed, allclose):
 
 
 def test_outputparam_errors(Simulator):
+    """Tests that Validation errors are raised when
+    giving node invalid parameters"""
     with nengo.Network() as model:
         # valid values
         nengo.Node(output=lambda t: t + 1)
@@ -188,6 +193,7 @@ def test_none(Simulator, seed):
     def input_function(t):
         if t < 0.005:
             return [1]
+        return None
 
     with model:
         u = nengo.Node(output=input_function)
@@ -232,6 +238,7 @@ def test_unconnected_node(Simulator):
 
 
 def test_len():
+    """Tests length of nodes is as expected"""
     with nengo.Network():
         n1 = nengo.Node(None, size_in=1)
         n3 = nengo.Node([1, 2, 3])
@@ -245,6 +252,8 @@ def test_len():
 
 
 def test_set_arraylike_output(Simulator):
+    """Tests Validation errors and warnings are raised when
+    passing invalid arguments"""
     with nengo.Network() as model:
         # if output is None, size_out == size_in
         with pytest.warns(UserWarning):
@@ -277,6 +286,8 @@ def test_set_arraylike_output(Simulator):
 
 
 def test_set_callable_output(Simulator):
+    """Tests node when given a callable output.
+    Tests validation errors when given invalid output functions"""
     model = nengo.Network()
 
     counter = []
@@ -389,6 +400,7 @@ def test_seed_error():
 
 
 def test_node_with_offset_array_view(Simulator):
+    """Tests node when passed an offset array"""
     v = np.array([[1.0, 2.0], [3.0, 4.0]])
     with nengo.Network() as model:
         node = nengo.Node(v[1])
@@ -412,6 +424,8 @@ def test_node_with_unusual_strided_view(Simulator, seed):
 
 @pytest.mark.parametrize("badval", [np.inf, np.nan, "string"])
 def test_invalid_values(Simulator, badval):
+    """Tests that validation errors and simulation errors are raised
+    when giving bad parameters to node"""
     with nengo.Network() as model:
         with pytest.raises(ValidationError):
             node = nengo.Node(badval)

@@ -235,7 +235,7 @@ class Vocabulary:
         # implementation, this will automatically create new semantic
         # pointers as needed.
         try:
-            value = eval(text, {}, self)
+            value = eval(text, {}, self)  # pylint: disable = eval-used
         except NameError:
             raise SpaParseError("Semantic pointers must start with a capital letter.")
 
@@ -465,7 +465,7 @@ class Vocabulary:
 
         for key in keys:
             if key not in self.keys:
-                self[key]
+                print(self[key])
 
     def create_subset(self, keys):
         """Returns the subset of this vocabulary.

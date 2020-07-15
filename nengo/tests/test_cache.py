@@ -50,10 +50,12 @@ class Mock:
 
 
 def isstrictsubclass(x, cls):
+    """Ensures x is a subclass, not the original, and the right instance"""
     return isinstance(x, type) and issubclass(x, cls) and x is not cls
 
 
 def list_objects(module):
+    """Returns a list of attributes in module"""
     return [getattr(module, key) for key in dir(module) if not key.startswith("_")]
 
 
@@ -96,6 +98,7 @@ def get_solver_test_args(
     solver=nengo.solvers.LstsqL2nz(),
     weights=False,
 ):
+    """Calculates and returns defaults"""
     conn = nengo.Connection(
         nengo.Ensemble(n_neurons, dimensions, add_to_container=False),
         nengo.Node(size_in=dimensions, add_to_container=False),
@@ -134,7 +137,7 @@ def test_decoder_cache(tmpdir):
 
         solver_args = get_solver_test_args()
         solver_args["gain"] *= 2
-        decoders3, solver_info3 = cache.wrap_solver(solver_mock)(**solver_args)
+        decoders3, _ = cache.wrap_solver(solver_mock)(**solver_args)
         assert SolverMock.n_calls[solver_mock] == 2
         assert np.any(decoders1 != decoders3)
 

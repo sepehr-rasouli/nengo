@@ -98,6 +98,7 @@ class Model:
         self.add_op(TimeUpdate(self.step, self.time))
 
         self.builder = Builder() if builder is None else builder
+
         self.build_callback = None
 
     def __str__(self):
@@ -131,8 +132,15 @@ class Model:
             The object to build into this model.
         """
         built = self.builder.build(self, obj, *args, **kwargs)
+
+        def NoneFunction(other):
+            return
+
+        function_to_call = NoneFunction
         if self.build_callback is not None:
-            self.build_callback(obj)
+            function_to_call = self.build_callback
+        if function_to_call is not NoneFunction:
+            function_to_call(obj)
         return built
 
     def has_built(self, obj):
@@ -233,6 +241,7 @@ class Builder:
             warnings.warn("Object %s has already been built." % obj)
             return None
 
+        obj_cls = None
         for obj_cls in type(obj).__mro__:
             if obj_cls in cls.builders:
                 break

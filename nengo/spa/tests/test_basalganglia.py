@@ -5,6 +5,7 @@ from nengo import spa
 
 
 def test_basal_ganglia(Simulator, seed, plt, allclose):
+    """Tests basal ganglia, and ensures the results are as expected"""
     model = spa.SPA(seed=seed)
 
     with model:
@@ -69,6 +70,8 @@ def test_basal_ganglia(Simulator, seed, plt, allclose):
 
 
 def test_errors():
+    """Tests that not implemented errors are raised when using
+    methods on basal ganglia"""
     # dot products between two sources not implemented
     with pytest.raises(NotImplementedError):
         with spa.SPA() as model:

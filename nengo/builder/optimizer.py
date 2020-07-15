@@ -94,8 +94,9 @@ def optimize(model, dg):
         scaled_rate = threshold * mean_reduction_rate
         if 0.0 < last_reduction_rate < scaled_rate:  # pragma: no cover
             logger.debug(
-                "Operator reduction rate fell below {} mean reduction rate. "
-                "Stopping optimizer.".format(threshold)
+                "Operator reduction rate fell below %d mean reduction rate. "
+                "Stopping optimizer.",
+                threshold,
             )
             break
 
@@ -371,21 +372,21 @@ class OpInfo:
         super().__init__()
         self.info = {}
 
-    def get(self, op):
-        if op not in self.info:
+    def get(self, op1):
+        if op1 not in self.info:
             try:
-                first_view = next(s for s in op.all_signals if s.is_view)
-                self.info[op] = self._OpDetails(
+                first_view = next(s for s in op1.all_signals if s.is_view)
+                self.info[op1] = self._OpDetails(
                     first_view=first_view,
                     v_offset=first_view.offset,
                     v_size=first_view.nbytes,
                     v_base=first_view.base,
                 )
             except StopIteration:
-                self.info[op] = self._OpDetails(
+                self.info[op1] = self._OpDetails(
                     first_view=None, v_offset=0, v_size=0, v_base=None
                 )
-        return self.info[op]
+        return self.info[op1]
 
     def clear(self):
         self.info.clear()
@@ -409,10 +410,10 @@ class OpsToMerge:
     def last_op(self):
         return self.ops[-1]
 
-    def add(self, op):
-        self.ops.append(op)
-        self.all_signals.update(op.all_signals)
-        self.all_dependents.update(self.dependents[op])
+    def add(self, op1):
+        self.ops.append(op1)
+        self.all_signals.update(op1.all_signals)
+        self.all_dependents.update(self.dependents[op1])
 
     @staticmethod
     def check_signals(op1, op2):
@@ -431,9 +432,9 @@ class OpsToMerge:
 
         return True
 
-    def not_sequential(self, op):
+    def not_sequential(self, op1):
         lastop = self.opinfo.get(self.ops[-1])
-        return lastop.v_offset + lastop.v_size < self.opinfo.get(op).v_offset
+        return lastop.v_offset + lastop.v_size < self.opinfo.get(op1).v_offset
 
 
 class OpMerger:
@@ -442,26 +443,26 @@ class OpMerger:
     mergers = {}
 
     @classmethod
-    def is_mergeable(cls, op, tomerge):
+    def is_mergeable(cls, op1, tomerge):
         merger = cls.mergers[tomerge.optype]
 
         independent_of_ops_tomerge = (
-            op not in tomerge.all_dependents
-            and len(tomerge.dependents[op].intersection(tomerge.ops)) == 0
+            op1 not in tomerge.all_dependents
+            and len(tomerge.dependents[op1].intersection(tomerge.ops)) == 0
         )
         independent_of_prior_merges = (
-            op not in tomerge.merged
-            and op not in tomerge.merged_dependents
-            and all(o not in tomerge.merged for o in tomerge.dependents[op])
+            op1 not in tomerge.merged
+            and op1 not in tomerge.merged_dependents
+            and all(o not in tomerge.merged for o in tomerge.dependents[op1])
         )
         return (
-            type(op) is tomerge.optype
+            type(op1) is tomerge.optype
             and independent_of_ops_tomerge
             and independent_of_prior_merges
             and cls.is_type_mergeable(tomerge.optype)
-            and tomerge.check_signals(tomerge.ops[-1], op)
-            and merger.check_signals(op, tomerge)
-            and merger.is_mergeable(tomerge.last_op, op)
+            and tomerge.check_signals(tomerge.ops[-1], op1)
+            and merger.check_signals(op1, tomerge)
+            and merger.is_mergeable(tomerge.last_op, op1)
         )
 
     @classmethod
@@ -487,8 +488,8 @@ class Merger:
     """Base class for all op merge classes."""
 
     @staticmethod
-    def check_signals(op, tomerge):
-        return len(tomerge.all_signals.intersection(op.all_signals)) == 0
+    def check_signals(op1, tomerge):
+        return len(tomerge.all_signals.intersection(op1.all_signals)) == 0
 
     @staticmethod
     def is_mergeable(op1, op2):
@@ -608,14 +609,14 @@ class DotIncMerger(Merger):
     """Merge `.DotInc` ops."""
 
     @staticmethod
-    def check_signals(op, tomerge):
-        none_shared = Merger.check_signals(op, tomerge) and (
+    def check_signals(op1, tomerge):
+        none_shared = Merger.check_signals(op1, tomerge) and (
             len(tomerge.ops) < 2 or tomerge.ops[0].X is not tomerge.ops[1].X
         )
         all_x_shared = (
-            op.A not in tomerge.all_signals
-            and op.Y not in tomerge.all_signals
-            and all(op.X not in [o.A, o.Y] and op.X is o.X for o in tomerge.ops)
+            op1.A not in tomerge.all_signals
+            and op1.Y not in tomerge.all_signals
+            and all(op1.X not in [o.A, o.Y] and op1.X is o.X for o in tomerge.ops)
         )
         return none_shared or all_x_shared
 

@@ -75,19 +75,22 @@ from nengo.transforms import ChannelShape, NoTransform, SparseMatrix
 
 
 def check_init_args(cls, args):
+    """Tests that cls's args are as expected"""
     assert getfullargspec(cls.__init__).args[1:] == args
 
 
 def check_repr(obj):
+    """Tests that repr gives back what is needed to create the object"""
     # some reprs need these in the local namespace
     array = np.array
     int64 = np.int64
     assert array
     assert int64
-    assert eval(repr(obj)) == obj
+    assert eval(repr(obj)) == obj  # pylint: disable = eval-used
 
 
 def test_core_objects():
+    """Tests repr on some core objects"""
     with nengo.Network() as net1:
 
         a = nengo.Ensemble(100, 2)
@@ -139,6 +142,7 @@ def test_core_objects():
 
 
 def test_neuron_types():
+    """Tests repr on neuron types"""
     check_init_args(Direct, ["initial_state"])
     check_repr(Direct())
     assert repr(Direct()) == "Direct()"
@@ -284,6 +288,7 @@ def test_neuron_types():
 
 
 def test_learning_rule_types():
+    """Tests repr on learning rule types"""
     check_init_args(PES, ["learning_rate", "pre_synapse"])
     check_repr(PES(learning_rate=0.1, pre_synapse=Lowpass(tau=0.2)))
     assert repr(PES()) == "PES()"
@@ -329,6 +334,7 @@ def test_learning_rule_types():
 
 
 def test_distributions():
+    """Tests repr on distributions"""
     check_init_args(PDF, ["x", "p"])
     check_repr(PDF([1, 2, 3], [0.1, 0.8, 0.1]))
     assert (
@@ -388,6 +394,7 @@ def test_distributions():
 
 
 def test_synapses():
+    """Tests repr on synapses"""
     check_init_args(LinearFilter, ["num", "den", "analog", "method"])
     check_repr(LinearFilter([1, 2], [3, 4]))
     check_repr(LinearFilter([1, 2], [3, 4], analog=False))
@@ -453,6 +460,7 @@ def test_processes():
 
 
 def test_piecewise():
+    """Tests repr on a piecewise function"""
     pytest.importorskip("scipy.optimize")
     for interpolation in ("linear", "nearest", "slinear", "quadratic", "cubic"):
         assert repr(Piecewise({1: 0.1, 2: 0.2, 3: 0.3}, interpolation)) == (
@@ -462,6 +470,7 @@ def test_piecewise():
 
 
 def test_solvers():
+    """Tests repr on some solvers"""
     check_init_args(Lstsq, ["weights", "rcond"])
     check_repr(Lstsq(weights=True, rcond=0.1))
     assert repr(Lstsq(weights=True, rcond=0.1)) == "Lstsq(weights=True, rcond=0.1)"
@@ -490,6 +499,7 @@ def test_solvers():
 
 
 def test_lstsql1_repr():
+    """Tests repr on lstsql1"""
     pytest.importorskip("sklearn")
 
     check_init_args(LstsqL1, ["weights", "l1", "l2", "max_iter"])
@@ -501,6 +511,7 @@ def test_lstsql1_repr():
 
 
 def test_nnls_repr():
+    """Tests repr on nnls"""
     pytest.importorskip("scipy.optimize")
 
     check_init_args(Nnls, ["weights"])
@@ -517,6 +528,7 @@ def test_nnls_repr():
 
 
 def test_transforms():
+    """Tests repr on transforms"""
     check_init_args(Dense, ["shape", "init"])
     # No check_repr because dense matrices are usually too big
     assert repr(Dense((1, 2), init=[[1, 1]])) == "Dense(shape=(1, 2))"
@@ -588,6 +600,7 @@ def test_transforms():
 
 
 def test_signals():
+    """Tests repr on signals"""
     assert repr(Signal(np.array([0.0]))) == "Signal(name=None, shape=(1,))"
     assert (
         repr(Signal(np.array([1.0, 1.0]), name="one")) == "Signal(name=one, shape=(2,))"
@@ -595,6 +608,7 @@ def test_signals():
 
 
 def test_operators():
+    """Tests repr on operators"""
     sig = Signal(np.array([0.0]), name="sig")
     assert fnmatch(repr(TimeUpdate(sig, sig)), "<TimeUpdate at 0x*>")
     assert fnmatch(repr(TimeUpdate(sig, sig, tag="tag")), "<TimeUpdate 'tag' at 0x*>")

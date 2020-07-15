@@ -193,7 +193,7 @@ class BasalGanglia(nengo.networks.BasalGanglia, Module):
             raise NotImplementedError("Only 1-dimensional sources can be scalar inputs")
 
         try:
-            scale = float(eval(source.transform.symbol))
+            scale = float(eval(source.transform.symbol))  # pylint: disable = eval-used
         except ValueError:
             raise ValidationError(
                 "Transform must be scalar; got '%s'" % source.transform.symbol,

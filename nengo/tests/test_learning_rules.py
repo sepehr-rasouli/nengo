@@ -1,7 +1,12 @@
+"""
+This module tests nengo/learning_rules.py
+"""
+
 import numpy as np
 import pytest
 
 import nengo
+
 from nengo.builder import Builder
 from nengo.builder.operator import Reset, Copy
 from nengo.builder.signal import Signal
@@ -13,6 +18,7 @@ from nengo.synapses import Alpha, Lowpass
 
 
 def best_weights(weight_data):
+    """gives the best weights for specified wait data"""
     return np.argmax(np.sum(np.var(weight_data, axis=0), axis=0))
 
 
@@ -32,6 +38,7 @@ def _test_pes(
     transform=np.array(1.0),
     rate=1e-3,
 ):
+    """A helper function for testing PES"""
     vout = np.array(vin) if vout is None else vout
 
     with nengo.Network(seed=seed) as model:
@@ -88,11 +95,13 @@ def _test_pes(
 
 
 def test_pes_ens_ens(Simulator, NonDirectNeuronType, plt, seed, allclose):
+    """Tests PES for ensembles"""
     function = lambda x: [x[1], x[0]]
     _test_pes(Simulator, NonDirectNeuronType, plt, seed, allclose, function=function)
 
 
 def test_pes_weight_solver(Simulator, plt, seed, allclose):
+    """Tests PES with weight solver enabled"""
     function = lambda x: [x[1], x[0]]
     _test_pes(
         Simulator, nengo.LIF, plt, seed, allclose, function=function, weight_solver=True
@@ -100,6 +109,8 @@ def test_pes_weight_solver(Simulator, plt, seed, allclose):
 
 
 def test_pes_ens_slice(Simulator, plt, seed, allclose):
+    """Tests PES with an ensemble slice"""
+
     vin = [0.5, -0.5]
     vout = [vin[0] ** 2 + vin[1] ** 2]
     function = lambda x: [x[0] - x[1]]
@@ -109,6 +120,7 @@ def test_pes_ens_slice(Simulator, plt, seed, allclose):
 
 
 def test_pes_neuron_neuron(Simulator, plt, seed, rng, allclose):
+    """Tests PES with pre and post neurons"""
     n = 200
     initial_weights = rng.uniform(high=4e-4, size=(n, n))
     _test_pes(
@@ -126,6 +138,7 @@ def test_pes_neuron_neuron(Simulator, plt, seed, rng, allclose):
 
 
 def test_pes_neuron_ens(Simulator, plt, seed, rng, allclose):
+    """Tests PES with pre neurons but not post neurons"""
     n = 200
     initial_weights = rng.uniform(high=1e-4, size=(2, n))
     _test_pes(
@@ -223,6 +236,7 @@ def test_pes_multidim_error(Simulator, seed):
 
 @pytest.mark.parametrize("pre_synapse", [0, Lowpass(tau=0.05), Alpha(tau=0.005)])
 def test_pes_synapse(Simulator, seed, pre_synapse, allclose):
+    """tests PES using pre_synapse"""
     rule = PES(pre_synapse=pre_synapse)
 
     with nengo.Network(seed=seed) as model:
@@ -294,6 +308,7 @@ def test_pes_cycle(Simulator):
     ],
 )
 def test_unsupervised(Simulator, rule_type, solver, seed, rng, plt, allclose):
+
     n = 200
 
     m = nengo.Network(seed=seed)
@@ -337,6 +352,7 @@ def test_unsupervised(Simulator, rule_type, solver, seed, rng, plt, allclose):
 
 
 def learning_net(learning_rule=nengo.PES, net=None, rng=np.random):
+    """Returns a learning network"""
     net = nengo.Network() if net is None else net
     with net:
         if learning_rule is nengo.PES:
@@ -434,6 +450,8 @@ def test_learningruletypeparam():
     """LearningRuleTypeParam must be one or many learning rules."""
 
     class Test:
+        """Test class"""
+
         lrp = LearningRuleTypeParam("lrp", default=None)
 
     inst = Test()
@@ -615,18 +633,22 @@ def test_custom_type(Simulator, allclose):
     """
 
     class TestRule(nengo.learning_rules.LearningRuleType):
+        """Test class"""
+
         modifies = "decoders"
 
         def __init__(self):
             super().__init__(1.0, size_in=3)
 
-    @Builder.register(TestRule)
+    # @Builder.register(TestRule)
     def build_test_rule(model, _, rule):
         error = Signal(np.zeros(rule.connection.size_in))
         model.add_op(Reset(error))
         model.sig[rule]["in"] = error[: rule.size_in]
 
         model.add_op(Copy(error, model.sig[rule]["delta"]))
+
+    Builder.register(TestRule)(build_test_rule)
 
     with nengo.Network() as net:
         a = nengo.Ensemble(10, 1)

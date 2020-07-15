@@ -91,7 +91,7 @@ RC_FILES = [
 ]
 
 
-class _RC(configparser.SafeConfigParser):
+class _RC(configparser.SafeConfigParser):  # pylint: disable=too-many-ancestors
     """Allows reading from and writing to Nengo RC settings.
 
     This object is a :class:`configparser.ConfigParser`, which means that
@@ -152,7 +152,7 @@ class _RC(configparser.SafeConfigParser):
                 filename = fp.name
             else:
                 filename = "<???>"
-        logger.debug("Reading configuration from {}".format(filename))
+        logger.debug(("Reading configuration from %s", filename))
         try:
             return configparser.SafeConfigParser.read_file(self, fp, filename)
         except AttributeError:
@@ -160,7 +160,7 @@ class _RC(configparser.SafeConfigParser):
             return configparser.SafeConfigParser.readfp(self, fp, filename)
 
     def read(self, filenames):
-        logger.debug("Reading configuration files {}".format(filenames))
+        logger.debug(("Reading configuration files %s", filenames))
         return configparser.SafeConfigParser.read(self, filenames)
 
     def reload_rc(self, filenames=None):

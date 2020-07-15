@@ -943,6 +943,9 @@ class Izhikevich(NeuronType):
 class RatesToSpikesNeuronType(NeuronType):
     """Base class for neuron types that turn rate types into spiking ones."""
 
+    def step(self):
+        return
+
     base_type = NeuronTypeParam("base_type")
     amplitude = NumberParam("amplitude", low=0, low_open=True)
 

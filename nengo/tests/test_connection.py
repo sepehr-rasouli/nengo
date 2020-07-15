@@ -15,6 +15,7 @@ from nengo.utils.testing import signals_allclose
 
 
 def test_args(AnyNeuronType, seed, rng):
+    """Creates a connection with many args"""
     N = 10
     d1, d2 = 3, 2
 
@@ -33,6 +34,8 @@ def test_args(AnyNeuronType, seed, rng):
 
 
 def test_node_to_neurons(Simulator, NonDirectNeuronType, plt, seed, allclose):
+    """Creates a connection from a neuron with non direct neuron 
+    type to a node and checks the result"""
     N = 50
 
     m = nengo.Network(seed=seed)
@@ -64,6 +67,8 @@ def test_node_to_neurons(Simulator, NonDirectNeuronType, plt, seed, allclose):
 
 
 def test_ensemble_to_neurons(Simulator, PositiveNeuronType, plt, seed, allclose):
+    """Creates a connection from an ensemble to a
+    neuron with a positive neuron type and checks the results"""
     with nengo.Network(seed=seed) as net:
         net.config[nengo.Ensemble].neuron_type = PositiveNeuronType()
         ens = nengo.Ensemble(40, dimensions=1)
@@ -99,6 +104,8 @@ def test_ensemble_to_neurons(Simulator, PositiveNeuronType, plt, seed, allclose)
 
 
 def test_node_to_ensemble(Simulator, NonDirectNeuronType, plt, seed, allclose):
+    """Creates many connections from nodes to ensembles and
+    tests that the results are as expected"""
     N = 50
 
     m = nengo.Network(seed=seed)
@@ -152,6 +159,8 @@ def test_node_to_ensemble(Simulator, NonDirectNeuronType, plt, seed, allclose):
 
 
 def test_neurons_to_ensemble(Simulator, PositiveNeuronType, plt, seed):
+    """Creates a connection between neurons and ensembles
+    and tests that the results are as expected"""
     N = 20
 
     m = nengo.Network(seed=seed)
@@ -183,6 +192,8 @@ def test_neurons_to_ensemble(Simulator, PositiveNeuronType, plt, seed):
 
 
 def test_neurons_to_node(Simulator, NonDirectNeuronType, plt, seed, allclose):
+    """Creates a connection between neurons and a node and tests
+    that the results are as expected"""
     N = 5
 
     m = nengo.Network(seed=seed)
@@ -214,6 +225,8 @@ def test_neurons_to_node(Simulator, NonDirectNeuronType, plt, seed, allclose):
 
 
 def test_neurons_to_neurons(Simulator, PositiveNeuronType, plt, seed, allclose):
+    """Creates a connection between neurons and neurons
+    and tests that the results are as expect"""
     N1, N2 = 50, 80
 
     m = nengo.Network(seed=seed)
@@ -321,6 +334,7 @@ def test_dist_transform(Simulator, seed, allclose):
 
 
 def test_weights(Simulator, AnyNeuronType, plt, seed, allclose):
+    """Tests connections using a solver with weights"""
     n1, n2 = 100, 50
 
     def func(t):
@@ -383,6 +397,9 @@ def test_vector(Simulator, AnyNeuronType, plt, seed, allclose):
 
 
 def test_dimensionality_errors(NonDirectNeuronType, seed, rng):
+    """Ensures validation errors are ran when giving connections
+    invalid dimenstions, and errors are not given when dimensions
+    are valid"""
     N = 10
     with nengo.Network(seed=seed) as m:
         m.config[nengo.Ensemble].neuron_type = NonDirectNeuronType()
@@ -596,6 +613,7 @@ def test_function_output_size(Simulator, plt, seed, allclose):
     """Try a function that outputs both 0-d and 1-d arrays"""
 
     def bad_function(x):
+        """Dont return negative"""
         return x if x > 0 else 0
 
     model = nengo.Network(seed=seed)
@@ -734,6 +752,7 @@ def test_set_weight_solver():
 
 
 def test_set_learning_rule():
+    """Creates connections with PES() learning rule"""
     with nengo.Network():
         a = nengo.Ensemble(10, 2)
         b = nengo.Ensemble(10, 2)

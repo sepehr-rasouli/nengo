@@ -287,7 +287,7 @@ class Process(FrozenObject):
         self.default_dt = default_dt
         self.seed = seed
 
-    def apply(self, x, d=None, dt=None, rng=np.random, copy=True, **kwargs):
+    def apply(self, x, d=None, dt=None, rng=np.random, make_copy=True, **kwargs):
         """Run process on a given input.
 
         Keyword arguments that do not appear in the parameter list below
@@ -303,7 +303,7 @@ class Process(FrozenObject):
             Simulation timestep. If None, ``default_dt`` will be used.
         rng : `numpy.random.RandomState`
             Random number generator used for stochstic processes.
-        copy : bool, optional
+        make_copy : bool, optional
             If True, a new output array will be created for output.
             If False, the input signal ``x`` will be overwritten.
         """
@@ -313,7 +313,7 @@ class Process(FrozenObject):
         rng = self.get_rng(rng)
         state = self.make_state(shape_in, shape_out, dt)
         step = self.make_step(shape_in, shape_out, dt, rng, state, **kwargs)
-        output = np.zeros((len(x),) + shape_out) if copy else x
+        output = np.zeros((len(x),) + shape_out) if make_copy else x
         for i, xi in enumerate(x):
             output[i] = step((i + 1) * dt, xi)
         return output

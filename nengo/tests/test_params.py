@@ -67,7 +67,7 @@ def test_obsoleteparam():
 
     # cannot be read
     with pytest.raises(ObsoleteError):
-        inst.ab
+        print(inst.ab)
 
     # can only be assigned Unconfigurable
     inst.ab = params.Unconfigurable

@@ -754,9 +754,9 @@ def test_bad_initial_state(rng, Simulator):
             if bad_state:
                 self.state = {"in": nengo.dists.Choice([0])}
 
-        def make_state(self, *args, **kwargs):
+        def make_state(self, n_neurons, rng=np.random, dtype=None):
             if self.bad_state:
-                return super().make_state(*args, **kwargs)
+                return super().make_state(n_neurons, rng=np.random, dtype=None)
             return {"rng": rng, "dict": {}}
 
     with nengo.Network() as net:

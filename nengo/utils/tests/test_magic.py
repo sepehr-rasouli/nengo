@@ -2,17 +2,18 @@ import inspect
 
 from nengo.utils.magic import decorator
 
-state = None  # Used to make sure decorators are running
+
+class Test2:
+    state = None  # Used to make sure decorators are running
 
 
 def _test_decorated(obj):
-    global state
 
     # Make sure decorator works
-    state = "not run"
+    Test2.state = "not run"
     obj(0, 0)
-    assert state == "run"
-    state = "not run"
+    assert Test2.state == "run"
+    Test2.state = "not run"
 
     # Make sure decorated function looks like non-decorated
     assert obj.__name__ == "f"
@@ -24,8 +25,8 @@ def test_function():
 
     @decorator
     def test_decorator(wrapped, instance, args, kwargs):
-        global state
-        state = "run"
+
+        Test2.state = "run"
         assert instance is None
         return wrapped(*args, **kwargs)
 
@@ -51,8 +52,8 @@ def test_boundfunction():
 
     @decorator
     def test_decorator(wrapped, instance, args, kwargs):
-        global state
-        state = "run"
+
+        Test2.state = "run"
         assert instance is not None
         assert type(instance).__name__ == "Test"
         return wrapped(*args, **kwargs)
@@ -81,8 +82,8 @@ def test_staticmethod():
 
     @decorator
     def test_decorator(wrapped, instance, args, kwargs):
-        global state
-        state = "run"
+
+        Test2.state = "run"
         assert instance is None
         return wrapped(*args, **kwargs)
 
@@ -136,8 +137,8 @@ def test_classmethod():
 
     @decorator
     def test_decorator(wrapped, instance, args, kwargs):
-        global state
-        state = "run"
+
+        Test2.state = "run"
         valid_names = {"TestBeforeStaticmethod", "TestAfterStaticmethod"}
         assert (
             instance is None
@@ -196,8 +197,8 @@ def test_class():
 
     @decorator
     def test_decorator(wrapped, instance, args, kwargs):
-        global state
-        state = "run"
+
+        Test2.state = "run"
         assert instance is None
         inst = wrapped(*args, **kwargs)
         inst.ran = True

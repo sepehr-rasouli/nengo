@@ -161,7 +161,9 @@ class ThreadedAssertion:
             try:
                 self.parent.assert_thread(self)
                 self.assertion_result = True
-            except Exception:
+            # This code isn't being run so I can't find the specific exceptions
+            except Exception:  # pylint: disable = broad-except
+
                 self.assertion_result = False
                 self.exc_info = sys.exc_info()
             finally:

@@ -8,6 +8,7 @@ from nengo.spa import Vocabulary
 
 
 def test_add(rng, allclose):
+    """Tests adding to a Vocabulary"""
     v = Vocabulary(3, rng=rng)
     v.add("A", [1, 2, 3])
     v.add("B", [4, 5, 6])
@@ -16,27 +17,29 @@ def test_add(rng, allclose):
 
 
 def test_include_pairs(rng):
+    """Tests key_pairs on a Vocabulary using include_pairs = True"""
     v = Vocabulary(10, rng=rng)
-    v["A"]
-    v["B"]
-    v["C"]
+    print(v["A"])
+    print(v["B"])
+    print(v["C"])
     assert v.key_pairs is None
     v.include_pairs = True
     assert v.key_pairs == ["A*B", "A*C", "B*C"]
     v.include_pairs = False
     assert v.key_pairs is None
     v.include_pairs = True
-    v["D"]
+    print(v["D"])
     assert v.key_pairs == ["A*B", "A*C", "B*C", "A*D", "B*D", "C*D"]
 
     v = Vocabulary(12, include_pairs=True, rng=rng)
-    v["A"]
-    v["B"]
-    v["C"]
+    print(v["A"])
+    print(v["B"])
+    print(v["C"])
     assert v.key_pairs == ["A*B", "A*C", "B*C"]
 
 
 def test_parse(rng, allclose):
+    """Tests parse on a Vocabulary"""
     v = Vocabulary(64, rng=rng)
     A = v.parse("A")
     B = v.parse("B")
@@ -57,6 +60,9 @@ def test_parse(rng, allclose):
 
 
 def test_invalid_dimensions():
+    """
+    Tests that a ValidationError is raised when giving a Vocabulary invalid dimensions
+    """
     with pytest.raises(ValidationError):
         Vocabulary(1.5)
     with pytest.raises(ValidationError):
@@ -66,11 +72,13 @@ def test_invalid_dimensions():
 
 
 def test_identity(rng, allclose):
+    """Tests identitiy on a Vocabulary"""
     v = Vocabulary(64, rng=rng)
     assert allclose(v.identity.v, np.eye(64)[0])
 
 
 def test_text(rng):
+    """Tests text on a Vocabularity"""
     v = Vocabulary(64, rng=rng)
     x = v.parse("A+B+C")
     y = v.parse("-D-E-F")
@@ -96,6 +104,7 @@ def test_text(rng):
 
 
 def test_capital(rng):
+    """tests parse errors are raised when using lowercase"""
     v = Vocabulary(16, rng=rng)
     with pytest.raises(SpaParseError):
         v.parse("a")
@@ -104,6 +113,7 @@ def test_capital(rng):
 
 
 def test_transform(rng):
+    """Tests transform_to"""
     v1 = Vocabulary(32, rng=rng)
     v2 = Vocabulary(64, rng=rng)
     A = v1.parse("A")
@@ -162,6 +172,7 @@ def test_transform(rng):
 
 
 def test_prob_cleanup(rng):
+    """Tests prob_cleanup on Vocabularies"""
     v = Vocabulary(64, rng=rng)
     assert 1.0 > v.prob_cleanup(0.7, 10000) > 0.9999
     assert 0.9999 > v.prob_cleanup(0.6, 10000) > 0.999
@@ -174,6 +185,10 @@ def test_prob_cleanup(rng):
 
 
 def test_create_pointer_warning(rng):
+    """
+    Tests that UserWarnings are raised when parsing
+    pointers too many pointers
+    """
     v = Vocabulary(2, rng=rng)
 
     # five pointers shouldn't fit
@@ -186,6 +201,10 @@ def test_create_pointer_warning(rng):
 
 
 def test_readonly(rng):
+    """
+    Tests that a ValueError is raised when parsing a
+    Vocabulary with readonly
+    """
     v1 = Vocabulary(32, rng=rng)
     v1.parse("A+B+C")
 
@@ -196,6 +215,9 @@ def test_readonly(rng):
 
 
 def test_subset(rng):
+    """
+    Tests creating and transform_to on subsets of Vocabularies
+    """
     v1 = Vocabulary(32, rng=rng)
     v1.parse("A+B+C+D+E+F+G")
 
@@ -223,6 +245,9 @@ def test_subset(rng):
 
 
 def test_extend(rng, allclose):
+    """
+    Tests extending Vocabularies
+    """
     v = Vocabulary(16, rng=rng)
     v.parse("A+B")
     assert v.keys == ["A", "B"]

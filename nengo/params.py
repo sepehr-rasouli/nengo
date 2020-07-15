@@ -230,6 +230,7 @@ class ObsoleteParam(Parameter):
             # Return self so default can be inspected
             return self
         self.raise_error()
+        return None
 
     def coerce(self, instance, value):
         if value is not Unconfigurable:

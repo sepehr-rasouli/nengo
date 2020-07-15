@@ -120,9 +120,9 @@ def test_multiply(allclose):
     assert allclose((1 * a).v, a.v)
 
     with pytest.raises(Exception):
-        a * None
+        print(a * None)
     with pytest.raises(Exception):
-        a * "string"
+        print(a * "string")
 
 
 def test_compare(rng, allclose):

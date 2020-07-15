@@ -4,6 +4,7 @@ import nengo
 
 
 def test_thresholding_preset(Simulator, seed, plt, allclose):
+    """Tests the thresholding ensembles preset in depth"""
     threshold = 0.3
     with nengo.Network(seed=seed) as model:
         with nengo.presets.ThresholdingEnsembles(threshold):
@@ -29,6 +30,7 @@ def test_thresholding_preset(Simulator, seed, plt, allclose):
 
 
 def test_thresholding_preset_radius(Simulator, seed):
+    """Tests the thresholding ensemble preset when given a radius"""
     threshold = 0.3
     radius = 0.5
     with nengo.Network(seed=seed) as model:

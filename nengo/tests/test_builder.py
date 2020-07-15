@@ -32,6 +32,7 @@ def test_seeding(Simulator, allclose):
         m3 = sim.data
 
     def compare_objs(obj1, obj2, attrs, equal=True):
+        """Compares all attrs between the objects"""
         for attr in attrs:
             check = allclose(getattr(obj1, attr), getattr(obj2, attr)) == equal
             if not check:
@@ -121,6 +122,7 @@ def test_seed_override(seed, allclose):
 
 
 def test_build_twice():
+    """Tests that a user watning is thrown when building twice"""
     model = nengo.builder.Model()
     ens = nengo.Ensemble(10, 1, add_to_container=False)
     model.seeds[ens] = 0

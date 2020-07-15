@@ -373,6 +373,8 @@ class RandomizedSVD(LeastSquaresSolver):
 
 
 class LeastSquaresSolverParam(Parameter):
+    """Simple descriptor for storing LeastSquaresSolver configuration parameters"""
+
     def coerce(self, instance, solver):
         self.check_type(instance, solver, LeastSquaresSolver)
         return super().coerce(instance, solver)

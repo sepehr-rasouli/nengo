@@ -308,14 +308,22 @@ def test_frozen():
 
 
 def test_synapse_subclass(Simulator):
+    class myItems:
+        def items(self):
+            return (["a", 1], ["b", 2], ["c", 3])
+
     class MySynapse(Synapse):
-        pass
+        def make_state(self, shape_in, shape_out, dt, dtype=None):
+            return myItems()
+
+        def make_step(self, shape_in, shape_out, dt, rng, state):
+            return
 
     with nengo.Network() as net:
         node_a = nengo.Node([0])
         node_b = nengo.Node(size_in=1)
         nengo.Connection(node_a, node_b, synapse=MySynapse())
 
-    with pytest.raises(NotImplementedError, match="must implement make_state"):
-        with Simulator(net):
-            pass
+    # with pytest.raises(NotImplementedError, match="must implement make_state"):
+    with Simulator(net):
+        pass

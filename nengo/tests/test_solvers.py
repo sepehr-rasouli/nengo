@@ -46,23 +46,27 @@ class Factory:
     def __str__(self):
         try:
             inst = self()
-        except Exception:
+        # This code isn't being run so I can't find the specific exceptions
+        except Exception:  # pylint: disable = broad-except
             inst = "%s(args=%s, kwargs=%s)" % (self.klass, self.args, self.kwargs)
         return str(inst)
 
     def __repr__(self):
         try:
             inst = self()
-        except Exception:
+        # This code isn't being run so I can't find the specific exceptions
+        except Exception:  # pylint: disable = broad-except
             inst = "<%r instance>" % (self.klass.__name__)
         return repr(inst)
 
 
 def get_encoders(n_neurons, dims, rng=None):
+    """Returns uniform hypersphere sample"""
     return UniformHypersphere(surface=True).sample(n_neurons, dims, rng=rng).T
 
 
 def get_eval_points(n_points, dims, rng=None, sort=False):
+    """Returns uniform hypersphere sample"""
     points = UniformHypersphere(surface=False).sample(n_points, dims, rng=rng)
     return points[np.argsort(points[:, 0])] if sort else points
 
@@ -658,6 +662,7 @@ def test_nosolver(values, weights, seed, Simulator, allclose):
 
 
 def test_nosolver_validation():
+    """Tests validation errors for NoSolver()"""
     # Must be a 2-dimensional array
     with pytest.raises(ValidationError):
         NoSolver(values=np.zeros(1))
@@ -672,6 +677,7 @@ def test_nosolver_validation():
 
 @pytest.mark.parametrize("solver", [LstsqDrop(weights=True)])
 def test_non_compositional_solver(Simulator, solver, seed, plt, allclose):
+    """Tests non compositional solvers with scipy and sklearn"""
     if isinstance(solver, LstsqL1):
         pytest.importorskip("sklearn")
     if isinstance(solver, Nnls):
@@ -701,6 +707,8 @@ def test_non_compositional_solver(Simulator, solver, seed, plt, allclose):
 
 
 def test_non_compositional_solver_transform_error(Simulator):
+    """Tests a build error for non compositional solvers
+    using"""
     pytest.importorskip("scipy.optimize")
 
     with nengo.Network() as net:

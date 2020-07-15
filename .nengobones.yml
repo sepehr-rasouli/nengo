@@ -95,38 +95,46 @@ setup_cfg:
       - nengo/spa
     disable:
       # TODO: fix these and start checking for them
-      - abstract-method
-      - bad-continuation
-      - bad-string-format-type
-      - broad-except
-      - not-callable
-      - chained-comparison
-      - consider-iterating-dictionary
-      - consider-merging-isinstance
-      - consider-using-in
-      - cyclic-import
-      - eval-used
-      - exec-used
-      - expression-not-assigned
-      - global-statement
-      - inconsistent-return-statements
-      - invalid-unary-operand-type
-      - keyword-arg-before-vararg
-      - logging-format-interpolation
-      - missing-docstring
-      - nonexistent-operator
-      - pointless-statement
-      - redefined-argument-from-local
-      - redefined-outer-name
-      - reimported
-      - single-string-used-for-slots
-      - superfluous-parens
-      - too-many-ancestors
-      - trailing-comma-tuple
-      - undefined-loop-variable
-      - unexpected-special-method-signature
-      - unnecessary-pass
-      - unused-variable
+      # - abstract-method
+
+      - bad-continuation #leave this on the list for now,
+      # since bad-continuation doesnt work well with black
+
+      # - bad-string-format-type
+      # - broad-except
+      # - not-callable
+      # - chained-comparison
+      # - consider-iterating-dictionary
+      # - consider-merging-isinstance
+      # - consider-using-in
+      # - cyclic-import
+      # - eval-used
+      # - exec-used
+      # - expression-not-assigned
+      # - global-statement
+      # - inconsistent-return-statements
+      # - invalid-unary-operand-type
+      # - keyword-arg-before-vararg
+      # - logging-format-interpolation
+
+      # - missing-docstring
+      - missing-module-docstring
+
+      # - nonexistent-operator
+      # - pointless-statement
+      # - redefined-argument-from-local
+      # - redefined-outer-name
+      # - reimported 
+
+
+      # - single-string-used-for-slots
+      # - superfluous-parens
+      # - too-many-ancestors
+      # - trailing-comma-tuple
+      # - undefined-loop-variable
+      # - unexpected-special-method-signature
+      # - unnecessary-pass
+      # - unused-variable
     known_third_party:
       - mpl_toolkits
       - pytest_allclose

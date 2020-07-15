@@ -3,6 +3,7 @@ from nengo import spa
 
 
 def test_basic():
+    """Tests two inputs and comparing them"""
     with spa.SPA() as model:
         model.compare = spa.Compare(dimensions=16)
 
@@ -32,7 +33,7 @@ def test_run(Simulator, seed):
 
         model.input = spa.Input(compare_A=inputA, compare_B="A")
 
-    compare, vocab = model.get_module_output("compare")
+    compare = model.get_module_output("compare")
 
     with model:
         p = nengo.Probe(compare, "output", synapse=0.03)

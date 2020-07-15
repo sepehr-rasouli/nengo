@@ -10,18 +10,16 @@ y = Source("y")
 
 
 def test_symbol():
-    A = Symbol("A")
     assert A.symbol == "A"
-    B = Symbol("B")
     assert str(B) == "B"
 
     assert str(A + B) == "(A + B)"
     with pytest.raises(TypeError):
-        A + "A"
+        print(A + "A")
 
     assert str(A - B) == "(A - B)"
     with pytest.raises(TypeError):
-        A - []
+        print(A - [])
 
     assert str(A * B) == "(A * B)"
     assert str(A * 1) == "A"
@@ -34,19 +32,19 @@ def test_symbol():
     assert str(Symbol("1") * A) == "A"
 
     with pytest.raises(TypeError):
-        A * {}
+        print(A * {})
 
     assert str(~A) == "~A"
     assert str(~(~A)) == "A"
 
     assert str(-A) == "-A"
-    assert str(-(-A)) == "A"
+    neg_A = -A
+    assert str(-neg_A) == "A"
 
     assert str(A * B + (B * ~A) * 0.5 - A) == "(((A * B) + ((B * ~A) * 0.5)) - A)"
 
 
 def test_source():
-    A = Symbol("A")
     s = Source("s")
     assert s.name == "s"
     assert str(s.transform) == "1"
@@ -65,13 +63,15 @@ def test_source():
     assert str(A * s_q) == "(Q * A) * s"
 
     assert str(-s) == "-1 * s"
-    assert str(-(-s)) == "s"
+    neg_s = -s
+    assert str(-neg_s) == "s"
+    # assert str(-1 * -s) == "s"
     assert str(-s_q) == "-Q * s"
 
     assert str(s + s_q) == "s + Q * s"
 
     with pytest.raises(TypeError):
-        s * "A"
+        print(s * "A")
 
 
 def test_inverted():
@@ -81,9 +81,9 @@ def test_inverted():
     assert str(~x * ~y) == "((~x) * (~y)) * 1"
     assert str(x * ~y) == "((x) * (~y)) * 1"
     with pytest.raises(ValueError):
-        ~(2 * x)
+        print(~(2 * x))
     with pytest.raises(ValueError):
-        ~(A * x)
+        print(~(A * x))
 
 
 def test_dotproduct():
@@ -103,16 +103,16 @@ def test_dotproduct():
     assert str(DotProduct(B, y) * 2) == "2 * dot(B, y)"
 
     with pytest.raises(TypeError):
-        A * DotProduct(x, y)
+        print(A * DotProduct(x, y))
     with pytest.raises(TypeError):
-        DotProduct(x, y) * B
+        print(DotProduct(x, y) * B)
 
     assert str(DotProduct(x, y) / 2) == "0.5 * dot(x, y)"
     assert str((DotProduct(x, y) / 2) / 2) == "0.25 * dot(x, y)"
     assert str(2 * DotProduct(B, y) / 2) == "dot(B, y)"
 
     with pytest.raises(TypeError):
-        DotProduct(x, y) / B
+        print(DotProduct(x, y) / B)
 
     assert str(DotProduct(x, y) + 1) == "dot(x, y) + 1"
     assert str(1 + DotProduct(x, y)) == "dot(x, y) + 1"
@@ -121,7 +121,8 @@ def test_dotproduct():
     assert str(B + DotProduct(x, y)) == "dot(x, y) + B"
 
     assert str(-DotProduct(x, y)) == "-dot(x, y)"
-    assert str(-(-DotProduct(x, y))) == "dot(x, y)"
+    neg_dot = -DotProduct(x, y)
+    assert str(-neg_dot) == "dot(x, y)"
 
     assert str(DotProduct(x, y) - 1) == "dot(x, y) + -1"
     assert str(1 - DotProduct(x, y)) == "-dot(x, y) + 1"
@@ -178,9 +179,9 @@ def test_source_addition():
     assert str(1 + x) == "x + 1"
 
     with pytest.raises(TypeError):
-        x + []
+        print(x + [])
     with pytest.raises(TypeError):
-        x + "1"
+        print(x + "1")
 
     assert str(x - y) == "x + -1 * y"
     assert str(x - A) == "x + -A"
@@ -189,9 +190,9 @@ def test_source_addition():
     assert str(x - 1) == "x + -1"
 
     with pytest.raises(TypeError):
-        x - {}
+        print(x - {})
     with pytest.raises(TypeError):
-        "1" - x
+        print("1" - x)
 
 
 def test_vector_list():
@@ -212,14 +213,14 @@ def test_vector_list():
     assert str(xy + 2 * xy) == "x + y + 2 * x + 2 * y"
 
     with pytest.raises(TypeError):
-        xy + ""
+        print(xy + "")
 
     assert str(x + xy) == "x + x + y"
     assert str(0.5 + xy) == "x + y + 0.5"
     assert str(A + xy) == "x + y + A"
 
     with pytest.raises(TypeError):
-        "" + xy
+        print("" + xy)
 
     assert str(xy - x) == "x + y + -1 * x"
     assert str(xy - 0.5) == "x + y + -0.5"
@@ -228,14 +229,15 @@ def test_vector_list():
     assert str(xy - 2 * xy) == "x + y + -2 * x + -2 * y"
 
     with pytest.raises(TypeError):
-        xy - ""
+        print(xy - "")
 
     assert str(x - xy) == "x + -1 * x + -1 * y"
     assert str(0.5 - xy) == "-1 * x + -1 * y + 0.5"
     assert str(A - xy) == "-1 * x + -1 * y + A"
 
     with pytest.raises(TypeError):
-        "" - xy
+        print("" - xy)
 
     assert str(-xy) == "-1 * x + -1 * y"
-    assert str(-(-xy)) == "x + y"
+    neg_xy = -xy
+    assert str(-neg_xy) == "x + y"

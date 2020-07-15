@@ -7,6 +7,7 @@ from nengo.exceptions import SpaParseError
 
 
 def thalamus_net(d=2, n=20, seed=None):
+    """Returns a model used for thalamus tests"""
     model = spa.SPA(seed=seed)
 
     with model:
@@ -40,6 +41,7 @@ def thalamus_net(d=2, n=20, seed=None):
 
 @pytest.mark.slow
 def test_thalamus(Simulator, plt, seed):
+    """Tests that thalamus values are as expected"""
     model = thalamus_net(d=16, n=80, seed=seed)
 
     with model:
@@ -79,6 +81,8 @@ def test_thalamus(Simulator, plt, seed):
 
 
 def test_routing(Simulator, seed, plt):
+    """Tests buffers, nodes, and connections on a thalamus model,
+    and that the values are as expected"""
     D = 3
     model = spa.SPA(seed=seed)
     with model:
@@ -203,6 +207,7 @@ def test_nondefault_routing(Simulator, seed):
 
 
 def test_errors():
+    """Tests a spa parse error and a not implemented error"""
     # motor does not exist
     with pytest.raises(SpaParseError):
         with spa.SPA() as model:

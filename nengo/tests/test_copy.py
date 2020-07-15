@@ -13,12 +13,11 @@ from nengo.utils.progress import TerminalProgressBar
 
 
 def assert_is_copy(cp, original):
+    """Makes sure that one parameter is a copy of the other"""
     assert cp is not original  # ensures separate parameters
     for param in iter_params(cp):
         param_inst = getattr(cp, param)
-        if isinstance(param_inst, nengo.solvers.Solver) or isinstance(
-            param_inst, nengo.base.NengoObject
-        ):
+        if isinstance(param_inst, (nengo.solvers.Solver, nengo.base.NengoObject)):
             assert param_inst is getattr(original, param)
         elif is_array_like(param_inst):
             assert np.all(param_inst == getattr(original, param))
@@ -27,12 +26,11 @@ def assert_is_copy(cp, original):
 
 
 def assert_is_deepcopy(cp, original):
+    """Makes sure that one parameter is a deepcopy of another """
     assert cp is not original  # ensures separate parameters
     for param in iter_params(cp):
         param_inst = getattr(cp, param)
-        if isinstance(param_inst, nengo.solvers.Solver) or isinstance(
-            param_inst, nengo.base.NengoObject
-        ):
+        if isinstance(param_inst, (nengo.solvers.Solver, nengo.base.NengoObject)):
             assert_is_copy(param_inst, getattr(original, param))
         elif is_array_like(param_inst):
             assert np.all(param_inst == getattr(original, param))
@@ -41,12 +39,14 @@ def assert_is_deepcopy(cp, original):
 
 
 def make_ensemble():
+    """Makes and returns an ensemble"""
     with nengo.Network():
         e = nengo.Ensemble(10, 1, radius=2.0)
     return e
 
 
 def make_probe():
+    """Makes and returns a probe"""
     with nengo.Network():
         e = nengo.Ensemble(10, 1)
         p = nengo.Probe(e, synapse=0.01)
@@ -54,12 +54,14 @@ def make_probe():
 
 
 def make_node():
+    """Makes and returns a node"""
     with nengo.Network():
         n = nengo.Node(np.min, size_in=2, size_out=2)
     return n
 
 
 def make_connection():
+    """Makes and returns a connection"""
     with nengo.Network():
         e1 = nengo.Ensemble(10, 1)
         e2 = nengo.Ensemble(10, 1)
@@ -68,6 +70,7 @@ def make_connection():
 
 
 def make_function_connection():
+    """Makes and returns a connection between two ensembles"""
     with nengo.Network():
         e1 = nengo.Ensemble(10, 1)
         e2 = nengo.Ensemble(10, 1)
@@ -87,6 +90,8 @@ def make_learning_connection():
 
 
 def make_network():
+    """Makes and returns a network with two ensembles
+    connected and a probe"""
     with nengo.Network() as model:
         e1 = nengo.Ensemble(10, 1)
         e2 = nengo.Ensemble(10, 1)
@@ -96,6 +101,7 @@ def make_network():
 
 
 def test_neurons_reference_copy():
+    """Tests copying an ensemble"""
     original = make_ensemble()
     cp = original.copy(add_to_container=False)
     assert original.neurons.ensemble is original
@@ -103,6 +109,7 @@ def test_neurons_reference_copy():
 
 
 def test_learningrule_reference_copy():
+    """Tests copying a learning rule"""
     original = make_learning_connection()
     cp = original.copy(add_to_container=False)
     assert original.learning_rule.connection is original
@@ -110,6 +117,7 @@ def test_learningrule_reference_copy():
 
 
 def test_copy_in_network_default_add():
+    """Tests copying a network inside a model"""
     original = make_network()
 
     with nengo.Network() as model:
@@ -120,12 +128,14 @@ def test_copy_in_network_default_add():
 
 
 def test_copy_outside_network_default_add():
+    """Tests copying a network outside a model"""
     original = make_network()
     cp = original.copy()
     assert_is_deepcopy(cp, original)
 
 
 def test_network_copies_defaults():
+    """Tests copying a configured network"""
     original = nengo.Network()
     original.config[nengo.Ensemble].radius = 1.5
     original.config[nengo.Connection].synapse = nengo.Lowpass(0.1)
@@ -136,6 +146,7 @@ def test_network_copies_defaults():
 
 
 def test_network_copy_allows_independent_manipulation():
+    """Tests that copy can be changed properly"""
     with nengo.Network() as original:
         nengo.Ensemble(10, 1)
     original.config[nengo.Ensemble].radius = 2.0
@@ -150,6 +161,7 @@ def test_network_copy_allows_independent_manipulation():
 
 
 def test_copies_structure():
+    """Tests copies are structured correctly"""
     with nengo.Network() as original:
         e1 = nengo.Ensemble(10, 1)
         e2 = nengo.Ensemble(10, 1)
@@ -168,6 +180,7 @@ def test_copies_structure():
 
 
 def test_network_copy_builds(Simulator):
+    """Test that copies of networks build without errors"""
     with Simulator(make_network().copy()):
         pass
 
@@ -185,6 +198,8 @@ def test_copy_obj_view():
 
 
 def test_copy_obj_view_in_connection():
+    """A copy is created then its connections are tested
+    to make sure they are copied properly"""
     with nengo.Network() as original:
         node = nengo.Node([0.1, 0.2])
         ens = nengo.Ensemble(10, 2)
@@ -201,6 +216,7 @@ def test_copy_obj_view_in_connection():
 
 
 def test_pickle_obj_view():
+    """Tests pickling and loading object to create a copy"""
     with nengo.Network():
         ens = nengo.Ensemble(10, 4)
         original = ens[:2]
@@ -215,6 +231,9 @@ def test_pickle_obj_view():
 
 
 def test_pickle_obj_view_in_connection():
+    """Tests pickling and loading object to create a copy,
+    then its connections are tested to make sure they
+    are copied properly"""
     with nengo.Network() as original:
         node = nengo.Node([0.1, 0.2])
         ens = nengo.Ensemble(10, 2)
@@ -246,6 +265,7 @@ class TestCopy:
     """A basic set of tests that should pass for all objects."""
 
     def test_copy_in_network(self, make_f, assert_f):
+        """A copy is created in network then tested outside"""
         original = make_f()
 
         with nengo.Network() as model:
@@ -255,6 +275,8 @@ class TestCopy:
         assert_f(cp, original)
 
     def test_copy_in_network_without_adding(self, make_f, assert_f):
+        """A copy is created without adding it to it's container,
+        then tested outside"""
         original = make_f()
 
         with nengo.Network() as model:
@@ -264,16 +286,22 @@ class TestCopy:
         assert_f(cp, original)
 
     def test_copy_outside_network(self, make_f, assert_f):
+        """Tests a network context error when attempting
+        to add a copy to a container when it is not in one"""
         original = make_f()
         with pytest.raises(NetworkContextError):
             original.copy(add_to_container=True)
 
     def test_copy_outside_network_without_adding(self, make_f, assert_f):
+        """Tests copying without adding to container outside
+        a network"""
         original = make_f()
         cp = original.copy(add_to_container=False)
         assert_f(cp, original)
 
     def test_python_copy_warns_abt_adding_to_network(self, make_f, assert_f):
+        """Tests a not added to network warning when
+        the original is outside the network, and it is copied inside"""
         original = make_f()
         copy(original)  # Fine because not in a network
         with nengo.Network():
@@ -288,11 +316,14 @@ class TestPickle:
     """A basic set of tests that should pass for all objects."""
 
     def test_pickle_roundtrip(self, make_f):
+        """Tests making a deepcopy using pickling and unpickling"""
         original = make_f()
         cp = pickle.loads(pickle.dumps(original))
         assert_is_deepcopy(cp, original)
 
     def test_unpickling_warning_in_network(self, make_f):
+        """Tests a not added to network warning when unpickling
+        inside a network when the original was not in the network"""
         original = make_f()
         pkl = pickle.dumps(original)
         with nengo.Network():
@@ -319,13 +350,17 @@ class TestPickle:
 )
 class TestFrozenObjectCopies:
     def test_copy(self, original):
+        """Tests if original's copy is a copy"""
         assert_is_copy(copy(original), original)
 
     def test_pickle_roundtrip(self, original):
+        """Tests if original's pickle test_pickle_roundtrip
+        is a deepcopy"""
         assert_is_deepcopy(pickle.loads(pickle.dumps(original)), original)
 
 
 def test_copy_spa(Simulator):
+    """Tests the functionality and nodes of spa copies"""
     with spa.SPA() as original:
         original.state = spa.State(16)
         original.cortex = spa.Cortical(spa.Actions("state = A"))

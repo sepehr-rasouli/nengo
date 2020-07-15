@@ -13,6 +13,7 @@ from nengo.utils.testing import signals_allclose
 
 
 def test_missing_attribute():
+    """Tests warning is thrown when accessing a missing attribute"""
     with nengo.Network():
         a = nengo.Ensemble(10, 1)
 
@@ -22,6 +23,7 @@ def test_missing_attribute():
 
 @pytest.mark.parametrize("dimensions", [1, 200])
 def test_encoders(Simulator, dimensions, seed, allclose, n_neurons=10, encoders=None):
+    """Tests that after simulating an ensemble, it has the correct encoders"""
     dtype = nengo.rc.float_dtype
     if encoders is None:
         encoders = np.random.normal(size=(n_neurons, dimensions))
@@ -39,6 +41,8 @@ def test_encoders(Simulator, dimensions, seed, allclose, n_neurons=10, encoders=
 
 
 def test_encoders_wrong_shape(Simulator, seed, allclose):
+    """Tests that a value error is given when testing
+    an encoder with the wrong dimensions"""
     dimensions = 3
     encoders = np.random.normal(size=dimensions)
     with pytest.raises(ValueError):
@@ -48,17 +52,23 @@ def test_encoders_wrong_shape(Simulator, seed, allclose):
 
 
 def test_encoders_negative_neurons(Simulator, seed, allclose):
+    """Tests that a value error is given when testing
+    an encoder with negative neurons"""
     with pytest.raises(ValueError):
         test_encoders(Simulator, 1, seed=seed, n_neurons=-1, allclose=allclose)
 
 
 def test_encoders_no_dimensions(Simulator, seed, allclose):
+    """Tests that a value error is given when testing
+    an encoder with no dimensions"""
     with pytest.raises(ValueError):
         test_encoders(Simulator, 0, seed=seed, allclose=allclose)
 
 
 @pytest.mark.filterwarnings("ignore:invalid value encountered in true_divide")
 def test_encoder_all_zero(Simulator, seed, allclose):
+    """Tests that a build error is raised when testing
+    an encoder with all zeroes"""
     with pytest.raises(BuildError, match="zero-length encoders"):
         test_encoders(
             Simulator, 1, seed=seed, allclose=allclose, encoders=np.zeros((10, 1))
@@ -225,6 +235,8 @@ def test_product(Simulator, AnyNeuronType, plt, seed):
 
 @pytest.mark.parametrize("dims, points", [(1, 528), (2, 823), (3, 937)])
 def test_eval_points_number(Simulator, dims, points, seed):
+    """Tests the shape of the eval points of a sim
+    is as expected"""
     model = nengo.Network(seed=seed)
     with model:
         A = nengo.Ensemble(5, dims, n_eval_points=points)
@@ -234,6 +246,7 @@ def test_eval_points_number(Simulator, dims, points, seed):
 
 
 def test_eval_points_number_warning(Simulator, seed, allclose):
+    """Tests that a user warning is raised when n_eval_points is incorrect"""
     model = nengo.Network(seed=seed)
     with model:
         A = nengo.Ensemble(5, 1, n_eval_points=10, eval_points=[[0.1], [0.2]])
@@ -247,6 +260,8 @@ def test_eval_points_number_warning(Simulator, seed, allclose):
 
 
 def test_gain_bias_warning(Simulator, seed):
+    """Tests that a nengo warning is raised when
+    bias overrides specified intercepts and max rates"""
     model = nengo.Network(seed=seed)
     with model:
         nengo.Ensemble(1, 1, gain=[1], bias=[1], intercepts=[0.5])
@@ -262,6 +277,9 @@ def test_gain_bias_warning(Simulator, seed):
     "neurons, dims", [(10, 1), (392, 1), (2108, 1), (100, 2), (1290, 4), (20, 9)]
 )
 def test_eval_points_heuristic(Simulator, neurons, dims, seed):
+    """Tests the shape of the eval points of a sim
+    is as expected"""
+
     def heuristic(neurons, dims):
         return max(np.clip(500 * dims, 750, 2500), 2 * neurons)
 
@@ -277,6 +295,7 @@ def test_eval_points_heuristic(Simulator, neurons, dims, seed):
 @pytest.mark.parametrize("sample", [False, True])
 @pytest.mark.parametrize("radius", [0.5, 1, 1.5])
 def test_eval_points_scaling(Simulator, sample, radius, seed, rng):
+    """Tests that all eval points are near a radius when given one"""
     eval_points = UniformHypersphere()
     if sample:
         eval_points = eval_points.sample(500, 3, rng=rng)
@@ -313,6 +332,7 @@ def test_len():
 
 
 def test_invalid_indices():
+    """Tests index errors are thrown when accessing invalid index"""
     with nengo.Network():
         ens = nengo.Ensemble(10, dimensions=2)
 
@@ -325,6 +345,7 @@ def test_invalid_indices():
 
 
 def test_invalid_rates(Simulator):
+    """Tests value error is thrown when given invalid rates"""
     with nengo.Network() as model:
         nengo.Ensemble(1, 1, max_rates=[200], neuron_type=nengo.LIF(tau_ref=0.01))
 
@@ -334,6 +355,7 @@ def test_invalid_rates(Simulator):
 
 
 def test_gain_bias(Simulator):
+    """Tests gain and bias are as expected"""
     N = 17
     D = 2
 
@@ -448,6 +470,8 @@ def test_no_norm_encoders(Simulator, allclose):
 @pytest.mark.parametrize("intercept", [1.0, 1.1])
 @pytest.mark.filterwarnings("ignore:divide by zero")
 def test_raises_exception_for_invalid_intercepts(Simulator, intercept):
+    """Tests that a build error is raised
+    when using invalid intercepts"""
     with nengo.Network() as model:
         nengo.Ensemble(1, 1, intercepts=[intercept])
 
@@ -457,6 +481,8 @@ def test_raises_exception_for_invalid_intercepts(Simulator, intercept):
 
 
 def test_neurons_equality():
+    """Tests that neurons are equal when created the same way,
+    even when given different neuron type"""
     with nengo.Network():
         neuron_type = nengo.LIF()
         ens0 = nengo.Ensemble(10, 1, neuron_type=neuron_type)
@@ -477,6 +503,8 @@ def test_neurons_equality():
 
 
 def test_pickle(seed, Simulator):
+    """Tests that pickling and unpickling does not affect
+    data"""
     with nengo.Network(seed=seed) as net:
         net.ens = nengo.Ensemble(10, 1)
         net.probe = nengo.Probe(net.ens)

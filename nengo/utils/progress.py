@@ -193,7 +193,6 @@ class ProgressBar:
 
         Indicates that not further updates will be made.
         """
-        pass
 
 
 class NoProgressBar(ProgressBar):
@@ -426,8 +425,8 @@ class HtmlProgressBar(ProgressBar):  # pragma: no cover
             self._handle.update(self._js_update(progress))
 
     class _HtmlBase:
-        def __init__(self, uuid):
-            self.uuid = uuid
+        def __init__(self, my_uuid):
+            self.uuid = my_uuid
 
         def __repr__(self):
             return (
@@ -786,8 +785,7 @@ def get_default_progressbar():
 
     try:
         return _load_class(pbar)()
-    except Exception as e:
-        warnings.warn(str(e))
+    except NotImplementedError:
         return NoProgressBar()
 
 

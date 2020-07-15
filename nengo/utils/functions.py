@@ -1,3 +1,6 @@
+"""Allows user to obtain function info"""
+
+
 def function_name(func):
     """Returns the name of a function.
 
