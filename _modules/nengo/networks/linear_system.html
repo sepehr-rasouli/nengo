@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>nengo.networks.linear_system &#8212; Nengo 3.1.0.dev0 docs</title>
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,600|Rajdhani:700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.nengo.ai/css/bootstrap.css" type="text/css">
+<style>
+  body .title-bar,
+  body .documentation-source h1:after {
+    background-color: #a8acaf;
+  }
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41658423-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-41658423-2');
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stickyfill/2.1.0/stickyfill.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- From basic/layout.html -->
+<script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+  
+<script src="../../../_static/underscore.js"></script>
+  
+  
+<script src="../../../_static/doctools.js"></script>
+  
+  
+<script src="../../../_static/language_data.js"></script>
+  
+  
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  
+  
+<script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  
+<script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<link rel="stylesheet" type="text/css" href="../../../_static/custom.css">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  </head><body class="bg-dark">
+
+<header class="fixed-top header-top shadow-sm">
+  <nav class="navbar navbar-expand-md navbar-light bg-white">
+    <a class="navbar-brand" href="https://www.nengo.ai/">
+      <img
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Nengo"
+        class="logo"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar-collapse"
+      aria-controls="navbar-collapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/">What is Nengo?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/examples/">Examples</a>
+        </li>
+        <li class="nav-item dropdown active">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-docs"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Documentation</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-docs"
+          >
+            
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo/">Nengo Core</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-gui/">Nengo GUI</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-dl/">Nengo DL</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-spa/">Nengo SPA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-extras/">Nengo Extras</a>
+            <a class="dropdown-item" href="https://arvoelke.github.io/nengolib-docs/">Nengolib</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-fpga/">Nengo FPGA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-loihi/">Nengo Loihi</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-ocl">Nengo OpenCL</a>
+            <a class="dropdown-item" href="https://github.com/project-rig/nengo_spinnaker">Nengo SpiNNaker</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-mpi">Nengo MPI</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/documentation/"
+              >All documentation</a
+            >
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-community"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Community</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-community"
+          >
+            <a class="dropdown-item" href="https://forum.nengo.ai">Forum</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/people/"
+              >People</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/summer-school/"
+              >Summer school</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/contributing/"
+              >Contributing</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/publications/"
+              >Publications</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/videos/"
+              >Videos</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/conduct/"
+              >Code of conduct</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/caa/">CAA</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/getting-started/"
+            >Getting started</a
+          >
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div class="main-content gradient-top">
+  <div class="container-fluid">
+    <div class="row"><a class="toggle-sidenav d-block d-md-none" href="#"
+  ><i class="icon-close fa fa-fw fa-arrow-left"></i
+  ><i class="icon-open fa fa-fw fa-arrow-right"></i
+></a>
+<div role="complementary" class="sidenav col-4 col-xl-3 p-0 border-right">
+  <h3 class="pt-5 px-5">
+    <a href="../../../index.html">
+      <img
+        class="img-fluid documentation-image"
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Nengo"
+      />
+    </a>
+  </h3>
+<form class="px-5 py-3 my-0 border-bottom" action="../../../search.html" method="get">
+  <div class="form-group form-group-single">
+    <input type="text" name="q" class="form-control" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+    <button type="submit" class="btn btn-link">
+      <img src="https://www.nengo.ai/img/icon-search.svg" alt="Go" />
+    </button>
+  </div>
+</form><div class="p-5 toctree">
+  
+    <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user-guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Nengo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project.html">Project information</a></li>
+</ul>
+
+  
+  </div>
+  
+  <form class="p-5 my-0 border-top">
+    <div class="form-group">
+      <label class="text-gray">Version:</label>
+      <select class="custom-select" onchange="switchVersion(this);">
+        
+        
+        <option selected>latest</option>
+        
+        
+          
+        <option value="../../../v3.0.0/_modules/nengo/networks/linear_system.html">
+          v3.0.0
+        </option>
+          
+        
+          
+        <option value="../../../v2.8.0/_modules/nengo/networks/linear_system.html">
+          v2.8.0
+        </option>
+          
+        
+      </select>
+    </div>
+  </form>
+  
+</div>
+      
+
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="container">
+          <div class="row">
+            <div class="col-10 offset-1 pb-5 documentation-source" role="main">
+              
+  <h1>Source code for nengo.networks.linear_system</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">nengo</span>
+<span class="kn">from</span> <span class="nn">nengo.linear_system</span> <span class="kn">import</span> <span class="n">LinearSystem</span><span class="p">,</span> <span class="n">LinearSystemParam</span>
+<span class="kn">from</span> <span class="nn">nengo.networks</span> <span class="kn">import</span> <span class="n">EnsembleArray</span>
+<span class="kn">from</span> <span class="nn">nengo.synapses</span> <span class="kn">import</span> <span class="n">LinearFilterParam</span>
+
+
+<div class="viewcode-block" id="ss2sim"><a class="viewcode-back" href="../../../networks.html#nengo.networks.ss2sim">[docs]</a><span class="k">def</span> <span class="nf">ss2sim</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">synapse</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Maps a linear system onto a synapse in state-space form.</span>
+
+<span class="sd">    This implements a generalization of Principle 3 from the Neural Engineering</span>
+<span class="sd">    Framework (NEF). [#]_ Intuitively, this routine compensates for the change in</span>
+<span class="sd">    dynamics that occurs when the integrator that usually forms the basis for any</span>
+<span class="sd">    linear system is replaced by the given synapse. This allows neural systems,</span>
+<span class="sd">    which typically do not have access to a perfect integrator, to implement</span>
+<span class="sd">    linear dynamical systems using the given synapse.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sys : `.LinearSystem`</span>
+<span class="sd">        Linear system representation of desired dynamical system.</span>
+<span class="sd">    synapse : `.LinearFilter`</span>
+<span class="sd">        The synapse providing the dynamics. Must be of type `.LinearFilter`.</span>
+<span class="sd">    dt : ``float`` or ``None``</span>
+<span class="sd">        Time-step of simulation. If not ``None``, then both `sys` and ``synapse`` are</span>
+<span class="sd">        discretized using ``dt``. In either case, if ``sys`` and ``synapse`` are now</span>
+<span class="sd">        digital, then the digital generalization of Principle 3 will be applied;</span>
+<span class="sd">        otherwise, the analog version will be applied.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mapped_sys : `.LinearSystem`</span>
+<span class="sd">        Linear system whose state-space matrices yield the desired</span>
+<span class="sd">        dynamics when using the synapse model instead of an integrator.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`.LinearSystemNetwork`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This routine is called automatically by `.LinearSystemNetwork`.</span>
+
+<span class="sd">    Principle 3 is a special case of this routine when called with a continuous</span>
+<span class="sd">    `nengo.Lowpass` synapse and ``dt=None``. However, specifying the ``dt`` (or</span>
+<span class="sd">    providing digital systems) will improve the accuracy in digital simulation.</span>
+
+<span class="sd">    For higher-order synapses, this makes a zero-order hold (ZOH) assumption</span>
+<span class="sd">    to avoid requiring the input derivatives. In this case, the mapping is</span>
+<span class="sd">    not perfect. If the input derivatives are known, then the accuracy can be</span>
+<span class="sd">    made perfect again. See references for details.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [#] A. R. Voelker and C. Eliasmith (2018) &quot;Improving spiking dynamical networks:</span>
+<span class="sd">       Accurate delays, higher-order synapses, and time cells.&quot; Neural Computation.</span>
+<span class="sd">       [`URL &lt;https://github.com/arvoelke/delay2017&gt;`__]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">dt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">analog</span><span class="p">:</span>
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">synapse</span><span class="o">.</span><span class="n">analog</span><span class="p">:</span>
+        <span class="n">synapse</span> <span class="o">=</span> <span class="n">synapse</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">synapse</span><span class="o">.</span><span class="n">analog</span> <span class="o">!=</span> <span class="n">sys</span><span class="o">.</span><span class="n">analog</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If `dt is None`, `sys.analog` must equal `synapse.analog`&quot;</span><span class="p">)</span>
+
+    <span class="n">num</span><span class="p">,</span> <span class="n">den</span> <span class="o">=</span> <span class="n">synapse</span><span class="o">.</span><span class="n">tf</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Synapse must be a single-output system&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">num</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="n">num_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="n">num</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span> <span class="o">*</span> <span class="n">num_max</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">num</span><span class="p">,</span> <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">den</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">synapse</span><span class="o">.</span><span class="n">analog</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">coeffs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;analog synapse (</span><span class="si">%s</span><span class="s2">) must not have zeros&quot;</span> <span class="o">%</span> <span class="n">synapse</span><span class="p">)</span>
+
+    <span class="c1"># If the synapse was discretized, then its numerator may now have multiple</span>
+    <span class="c1">#   coefficients. By summing them together, we are implicitly assuming that</span>
+    <span class="c1">#   the output of the synapse will stay constant across</span>
+    <span class="c1">#   synapse.order_num + 1 time-steps. This is also related to:</span>
+    <span class="c1">#   http://dsp.stackexchange.com/questions/33510/difference-between-convolving-before-after-discretizing-lti-systems  # noqa: E501</span>
+    <span class="c1"># For example, if we have H = Lowpass(0.1), then the only difference</span>
+    <span class="c1">#   between sys1 = cont2discrete(H*H, dt) and</span>
+    <span class="c1">#           sys2 = cont2discrete(H, dt)*cont2discrete(H, dt), is that</span>
+    <span class="c1">#   np.sum(sys1.num) == sys2.num (while sys1.den == sys2.den)!</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">den</span> <span class="o">/</span> <span class="n">gain</span>
+
+    <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">ss</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">synapse</span><span class="o">.</span><span class="n">state_size</span>
+    <span class="n">powA</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_power</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+    <span class="n">AH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">powA</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">BH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+        <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">powA</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">B</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">LinearSystem</span><span class="p">((</span><span class="n">AH</span><span class="p">,</span> <span class="n">BH</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">),</span> <span class="n">analog</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">analog</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">x0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinearSystemNetwork"><a class="viewcode-back" href="../../../networks.html#nengo.networks.LinearSystemNetwork">[docs]</a><span class="k">class</span> <span class="nc">LinearSystemNetwork</span><span class="p">(</span><span class="n">nengo</span><span class="o">.</span><span class="n">Network</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implement an arbitrary linear system in neurons.</span>
+
+<span class="sd">    Takes a linear system and uses `.ss2sim` to account for the effect of the</span>
+<span class="sd">    input/recurrent synapse on the system dynamics. The resulting network will provide</span>
+<span class="sd">    an accurate implementation of the system using the provided synapse.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system : `.LinearSystem`</span>
+<span class="sd">        The LinearSystem to be implemented.</span>
+<span class="sd">    synapse : `.LinearFilter`</span>
+<span class="sd">        The synapse to use on the recurrent connection and input connection. Must be</span>
+<span class="sd">        an instance or subclass of `.LinearFilter`.</span>
+<span class="sd">    n_neurons : int</span>
+<span class="sd">        The number of neurons per ensemble in the state `.EnsembleArray`.</span>
+<span class="sd">    dt : float (optional)</span>
+<span class="sd">        The time constant used to discretize the synapses. If provided, it should be</span>
+<span class="sd">        the same as the simulator time constant. If not provided (default), the system</span>
+<span class="sd">        will not account for the effects of discretization.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mapped_system : `.LinearSystem`</span>
+<span class="sd">        The mapped linear system that will be implemented by the network. It accounts</span>
+<span class="sd">        for the effect of the recurrent/input synapses on the dynamics.</span>
+<span class="sd">    input : `.Node`</span>
+<span class="sd">        A passthrough `.Node` for connecting the system input.</span>
+<span class="sd">    state : `.EnsembleArray`</span>
+<span class="sd">        The object representing the system state.</span>
+<span class="sd">    state_input : `.Node`</span>
+<span class="sd">        The input to the system state.</span>
+<span class="sd">    state_output : `.Node`</span>
+<span class="sd">        The output from the system state.</span>
+<span class="sd">    output : `.Node`</span>
+<span class="sd">        A passthrough `.Node` for retrieving the system output.</span>
+<span class="sd">    ss_connections : dict of (str, `.Connection`)</span>
+<span class="sd">        Dictionary containing a `.Connection` for each of the state-space transform</span>
+<span class="sd">        matrices &quot;A&quot;, &quot;B&quot;, &quot;C&quot;, and &quot;D&quot;. &quot;B&quot; will not be present if the system does</span>
+<span class="sd">        not have input, and &quot;D&quot; will not be present if the ``D`` matrix is zero.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`.ss2sim`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">system</span> <span class="o">=</span> <span class="n">LinearSystemParam</span><span class="p">(</span><span class="s2">&quot;system&quot;</span><span class="p">)</span>
+    <span class="n">synapse</span> <span class="o">=</span> <span class="n">LinearFilterParam</span><span class="p">(</span><span class="s2">&quot;synapse&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">system</span><span class="p">,</span>
+        <span class="n">synapse</span><span class="p">,</span>
+        <span class="n">n_neurons</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_synapse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">add_to_container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">ens_kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">add_to_container</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synapse</span> <span class="o">=</span> <span class="n">synapse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapped_system</span> <span class="o">=</span> <span class="n">ss2sim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">synapse</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapped_system</span><span class="o">.</span><span class="n">ss</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="c1"># --- make state ensemble</span>
+            <span class="n">x_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapped_system</span><span class="o">.</span><span class="n">state_size</span>
+            <span class="n">x_label</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:state&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">ens_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_state_object</span><span class="p">(</span>
+                <span class="n">n_neurons</span><span class="p">,</span> <span class="n">x_dims</span><span class="p">,</span> <span class="o">**</span><span class="n">ens_kwargs</span>
+            <span class="p">)</span>
+
+            <span class="c1"># --- make connections</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ss_connections</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ss_connections</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state_output</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state_input</span><span class="p">,</span>
+                <span class="n">transform</span><span class="o">=</span><span class="n">A</span><span class="p">,</span>
+                <span class="n">synapse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">synapse</span><span class="p">,</span>
+                <span class="n">initial_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mapped_system</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">system</span><span class="o">.</span><span class="n">input_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">size_in</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">input_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ss_connections</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_input</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> <span class="n">synapse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">synapse</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">size_in</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">output_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ss_connections</span><span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">synapse</span><span class="o">=</span><span class="n">output_synapse</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">D</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">D</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ss_connections</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nengo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">D</span><span class="p">,</span> <span class="n">synapse</span><span class="o">=</span><span class="n">output_synapse</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_state_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">EnsembleArray</span><span class="p">(</span><span class="n">n_neurons</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">output</span></div>
+</pre></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><footer class="text-light footer-main gradient-bottom">
+  <p class="small text-center mb-0">
+    <a class="no-hover-line" href="https://appliedbrainresearch.com">
+      <img
+        src="https://appliedbrainresearch.com/img/logo-blue-notext.svg"
+        height="48"
+      />
+    </a>
+    <a href="https://www.nengo.ai/">What is Nengo?</a>
+    <a href="https://www.nengo.ai/examples/">Examples</a>
+    <a href="https://www.nengo.ai/documentation/">Documentation</a>
+    <a href="https://www.nengo.ai/getting-started/">Getting started</a>
+    <a href="https://www.nengo.ai/privacy/">Privacy</a>
+  </p>
+  <p class="small text-center mb-0">&copy; Applied Brain Research</p>
+</footer>
+<script>
+  function switchVersion(select) {
+    var option = select.selectedOptions[0];
+    if (option.hasAttribute("value")) {
+      window.location = option.value;
+    }
+  }
+</script>
+
+<script>
+  var elements = document.querySelectorAll('.sidenav');
+  Stickyfill.add(elements);
+</script>
+<script>
+  ScrollReveal().reveal(".fade-in", {
+      scale: 0.85,
+      duration: 1000,
+      delay: 250,
+      interval: 50
+  });
+</script>
+<script>
+  $('a.toggle-sidenav').on('click', function(e) {
+    e.preventDefault();
+    if ( $(this).hasClass('active') ) {
+      $(this).removeClass('active');
+      $('.sidenav').removeClass('open');
+    } else {
+      $(this).addClass('active');
+      $('.sidenav').addClass('open');
+    }
+  });
+</script>
+<script>
+  var lists = document.querySelectorAll('.toctree ul');
+  lists.forEach((ul) => {
+      ul.classList.add("nav");
+  });
+  var links = document.querySelectorAll('.toctree a');
+  links.forEach((link) => {
+      link.classList.add("nav-link");
+  });
+  $("body").scrollspy({target: ".sidenav"});
+</script>
+  </body>
+</html>
